@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream text-ink dark:bg-ink dark:text-cream transition-colors duration-300;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  ::selection {
+    @apply bg-caramel/30;
+  }
+  :focus-visible {
+    outline: 2px solid #A8734A;
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-xs uppercase tracking-widest2 text-caramel dark:text-caramel font-semibold;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-espresso text-cream dark:bg-caramel dark:text-ink px-7 py-3.5 rounded-sm text-sm tracking-wide uppercase font-semibold hover:bg-bark dark:hover:bg-clay transition-colors duration-300 ease-silk;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 border border-espresso text-espresso dark:border-cream dark:text-cream px-7 py-3.5 rounded-sm text-sm tracking-wide uppercase font-semibold hover:bg-espresso hover:text-cream dark:hover:bg-cream dark:hover:text-ink transition-colors duration-300 ease-silk;
+  }
+  .container-lax {
+    @apply mx-auto max-w-7xl px-5 sm:px-8 lg:px-12;
+  }
+  .input-lax {
+    @apply w-full bg-transparent border border-line dark:border-espresso rounded-sm px-4 py-3 text-sm focus:border-caramel transition-colors;
+  }
+}

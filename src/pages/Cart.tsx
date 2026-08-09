@@ -1,0 +1,81 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { optimizedUrl } from "@/lib/cloudinary";
+
+export default function Cart() {
+  const { lines, updateQuantity, removeLine, subtotal } = useCart();
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+
+  return (
+    <div className="container-lax py-16">
+      <h1 className="font-display text-4xl mb-10">{t.cart.title}</h1>
+
+      {lines.length === 0 ? (
+        <div className="text-center py-20">
+          <p className="text-espresso/60 dark:text-cream/60 mb-6">{t.cart.empty}</p>
+          <Link to="/boutique" className="btn-secondary">
+            {t.cart.continueShopping}
+          </Link>
+        </div>
+      ) : (
+        <div className="grid lg:grid-cols-3 gap-12">
+          <div className="lg:col-span-2 divide-y divide-line dark:divide-espresso">
+            {lines.map((l) => (
+              <div key={`${l.productId}-${l.colorId}`} className="py-6 flex gap-5">
+                <div className="w-24 h-28 bg-sand dark:bg-espresso/40 rounded-sm overflow-hidden shrink-0">
+                  {l.photoUrl && <img src={optimizedUrl(l.photoUrl, 200)} alt={l.productName} className="w-full h-full object-cover" />}
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between">
+                    <div>
+                      <p className="text-sm font-medium">{l.productName}</p>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="w-3 h-3 rounded-full border border-line" style={{ backgroundColor: l.colorHex }} />
+                        <span className="text-xs text-espresso/60 dark:text-cream/60">{l.colorName}</span>
+                      </div>
+                    </div>
+                    <p className="text-sm font-semibold">
+                      {(l.unitPrice * l.quantity).toLocaleString("fr-FR")} {t.common.fcfa}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center border border-line dark:border-espresso rounded-sm">
+                      <button className="w-8 h-8" onClick={() => updateQuantity(l.productId, l.colorId, l.quantity - 1)}>
+                        −
+                      </button>
+                      <span className="w-8 text-center text-sm">{l.quantity}</span>
+                      <button className="w-8 h-8" onClick={() => updateQuantity(l.productId, l.colorId, l.quantity + 1)}>
+                        +
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => removeLine(l.productId, l.colorId)}
+                      className="text-xs uppercase tracking-wide text-espresso/50 dark:text-cream/50 hover:text-clay"
+                    >
+                      {t.cart.remove}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="border border-line dark:border-espresso rounded-sm p-6 h-fit">
+            <div className="flex justify-between text-sm mb-3">
+              <span>{t.cart.subtotal}</span>
+              <span>
+                {subtotal.toLocaleString("fr-FR")} {t.common.fcfa}
+              </span>
+            </div>
+            <p className="text-xs text-espresso/50 dark:text-cream/50 mb-6">Frais de livraison calculés à l'étape suivante.</p>
+            <button onClick={() => navigate("/commande")} className="btn-primary w-full">
+              {t.cart.checkout}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
