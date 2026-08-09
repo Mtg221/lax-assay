@@ -37,7 +37,7 @@ export default function AdminLogin() {
         </button>
       </form>
       <p className="text-center text-sm text-espresso/50 dark:text-cream/50 mt-6">
-        <Link to="/boutique" className="text-caramel hover:underline">← Retour à la boutique</Link>
+        <Link to="/" className="text-caramel hover:underline">← Retour à l'accueil</Link>
       </p>
     </div>
   );
