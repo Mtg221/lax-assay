@@ -15,6 +15,7 @@ export default function Footer() {
           <Link to="/boutique" className="block hover:text-caramel transition-colors">Boutique</Link>
           <Link to="/a-propos" className="block hover:text-caramel transition-colors">À propos</Link>
           <Link to="/panier" className="block hover:text-caramel transition-colors">Panier</Link>
+          <Link to="/admin/login" className="block hover:text-caramel transition-colors mt-2">Administration</Link>
         </div>
         <div className="text-sm space-y-2">
           <p className="eyebrow mb-2">Laxassaye</p>
