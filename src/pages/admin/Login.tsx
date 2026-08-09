@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function AdminLogin() {
@@ -36,6 +36,9 @@ export default function AdminLogin() {
           {loading ? "Connexion…" : "Se connecter"}
         </button>
       </form>
+      <p className="text-center text-sm text-espresso/50 dark:text-cream/50 mt-6">
+        <Link to="/boutique" className="text-caramel hover:underline">← Retour à la boutique</Link>
+      </p>
     </div>
   );
 }
