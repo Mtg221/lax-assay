@@ -43,6 +43,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
+    // Wait for onAuthStateChanged to confirm admin status
+    await new Promise<void>((resolve) => {
+      const unsub = onAuthStateChanged(auth, async (u) => {
+        if (u) {
+          try {
+            const adminDoc = await getDoc(doc(db, "admins", u.uid));
+            if (adminDoc.exists()) {
+              unsub();
+              resolve();
+            }
+          } catch {
+            // ignore, will timeout
+          }
+        }
+      });
+      // Fallback timeout
+      setTimeout(() => {
+        unsub();
+        resolve();
+      }, 3000);
+    });
   };
 
   const logout = async () => {
