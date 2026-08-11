@@ -1,7 +1,6 @@
 import { useLocation, useParams, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { getSettings } from "@/services/settings";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface CafeToubaOrderSummary {
   orderNumber: string;
@@ -21,14 +20,11 @@ export default function CafeToubaConfirmation() {
   const { orderNumber: orderNumberParam } = useParams<{ orderNumber: string }>();
   const location = useLocation();
   const { t } = useLanguage();
-  const [whatsappNumber, setWhatsappNumber] = useState("");
+  const { settings } = useSettings();
 
   const summary = (location.state as CafeToubaOrderSummary | undefined) || null;
   const orderNumber = summary?.orderNumber || orderNumberParam || "";
-
-  useEffect(() => {
-    getSettings().then((s) => setWhatsappNumber(s.whatsappNumber));
-  }, []);
+  const whatsappNumber = settings.whatsappNumber;
 
   const paymentMethodLabels: Record<string, string> = {
     cash_on_delivery: "Paiement à la livraison",

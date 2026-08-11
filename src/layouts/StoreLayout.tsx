@@ -1,16 +1,11 @@
 import { Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import { getSettings } from "@/services/settings";
+import { useSettings } from "@/contexts/SettingsContext";
 
 export default function StoreLayout() {
-  const [whatsapp, setWhatsapp] = useState("");
-
-  useEffect(() => {
-    getSettings().then((s) => setWhatsapp(s.whatsappNumber));
-  }, []);
+  const { settings } = useSettings();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -19,7 +14,7 @@ export default function StoreLayout() {
         <Outlet />
       </main>
       <Footer />
-      <WhatsAppButton phoneDigits={whatsapp} />
+      <WhatsAppButton phoneDigits={settings.whatsappNumber} />
     </div>
   );
 }

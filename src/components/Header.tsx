@@ -3,6 +3,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useCart } from "@/contexts/CartContext";
 import { useCafeToubaCart } from "@/contexts/CafeToubaCartContext";
+import { useSettings } from "@/contexts/SettingsContext";
 import { useState } from "react";
 
 export default function Header() {
@@ -10,6 +11,7 @@ export default function Header() {
   const { theme, toggleTheme } = useTheme();
   const { itemCount } = useCart();
   const { itemCount: cafeItemCount } = useCafeToubaCart();
+  const { settings } = useSettings();
   const [open, setOpen] = useState(false);
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -20,8 +22,11 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-40 bg-cream/90 dark:bg-ink/90 backdrop-blur border-b border-line dark:border-espresso">
       <div className="container-lax flex items-center justify-between h-20">
-        <Link to="/" className="font-display text-2xl tracking-wide">
-          Laxassaye
+        <Link to="/" className="flex items-center gap-3">
+          {settings.logoUrl && (
+            <img src={settings.logoUrl} alt={settings.storeName} className="h-10 w-auto" />
+          )}
+          <span className="font-display text-2xl tracking-wide">{settings.storeName || "Laxassaye"}</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-9">

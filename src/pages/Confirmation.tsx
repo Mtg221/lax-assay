@@ -1,7 +1,6 @@
 import { useLocation, useParams, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { getSettings } from "@/services/settings";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface OrderSummary {
   orderNumber: string;
@@ -18,14 +17,11 @@ export default function Confirmation() {
   const { orderNumber: orderNumberParam } = useParams<{ orderNumber: string }>();
   const location = useLocation();
   const { t } = useLanguage();
-  const [whatsappNumber, setWhatsappNumber] = useState("");
+  const { settings } = useSettings();
 
   const summary = (location.state as OrderSummary | undefined) || null;
   const orderNumber = summary?.orderNumber || orderNumberParam || "";
-
-  useEffect(() => {
-    getSettings().then((s) => setWhatsappNumber(s.whatsappNumber));
-  }, []);
+  const whatsappNumber = settings.whatsappNumber;
 
   const message = summary
     ? [

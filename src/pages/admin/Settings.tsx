@@ -1,19 +1,25 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { getSettings, saveSettings, DEFAULT_SETTINGS } from "@/services/settings";
+import { saveSettings } from "@/services/settings";
 import { listShippingZones } from "@/services/shipping";
 import { uploadImage } from "@/lib/cloudinary";
+import { useSettings } from "@/contexts/SettingsContext";
 import type { StoreSettings, ShippingZone } from "@/types";
 
 export default function AdminSettings() {
-  const [settings, setSettings] = useState<StoreSettings>(DEFAULT_SETTINGS);
+  const { settings: contextSettings, refresh } = useSettings();
+  const [settings, setSettings] = useState<StoreSettings>(contextSettings);
   const [zones, setZones] = useState<ShippingZone[]>([]);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    getSettings().then(setSettings);
     listShippingZones().then(setZones);
   }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSettings(contextSettings);
+  }, [contextSettings]);
 
   const handleLogoUpload = async (file: File | undefined) => {
     if (!file) return;
@@ -23,6 +29,7 @@ export default function AdminSettings() {
       const newSettings = { ...settings, logoUrl: result.url };
       setSettings(newSettings);
       await saveSettings(newSettings);
+      await refresh();
     } catch (e) {
       alert(e instanceof Error ? e.message : "Erreur lors de l'upload du logo");
     } finally {
@@ -44,6 +51,7 @@ export default function AdminSettings() {
     setSaving(true);
     try {
       await saveSettings(settings);
+      await refresh();
     } finally {
       setSaving(false);
     }

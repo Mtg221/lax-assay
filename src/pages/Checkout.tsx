@@ -3,18 +3,17 @@ import { useNavigate, Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { listShippingZones } from "@/services/shipping";
-import { getSettings } from "@/services/settings";
+import { useSettings } from "@/contexts/SettingsContext";
 import { placeOrder } from "@/services/orders";
 import type { ShippingZone } from "@/types";
 
 export default function Checkout() {
   const { lines, subtotal, clear } = useCart();
   const { t } = useLanguage();
+  const { settings } = useSettings();
   const navigate = useNavigate();
 
   const [zones, setZones] = useState<ShippingZone[]>([]);
-  const [freeShippingEnabled, setFreeShippingEnabled] = useState(false);
-  const [freeShippingZoneIds, setFreeShippingZoneIds] = useState<string[]>([]);
   const [selectedZoneId, setSelectedZoneId] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -32,16 +31,14 @@ export default function Checkout() {
   }, [lines, navigate]);
 
   useEffect(() => {
-    Promise.all([listShippingZones(), getSettings()]).then(([z, s]) => {
+    listShippingZones().then((z) => {
       setZones(z);
-      setFreeShippingEnabled(s.freeShippingEnabled);
-      setFreeShippingZoneIds(s.freeShippingZoneIds);
       if (z.length) setSelectedZoneId(z[0].id);
     });
   }, []);
 
   const selectedZone = zones.find((z) => z.id === selectedZoneId);
-  const isFreeShipping = freeShippingEnabled && selectedZone && freeShippingZoneIds.includes(selectedZone.id);
+  const isFreeShipping = settings.freeShippingEnabled && selectedZone && settings.freeShippingZoneIds.includes(selectedZone.id);
   const shippingCost = useMemo(() => {
     if (!selectedZone) return 0;
     if (isFreeShipping || selectedZone.freeShipping) return 0;

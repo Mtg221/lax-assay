@@ -7,6 +7,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { CafeToubaCartProvider } from "@/contexts/CafeToubaCartContext";
+import { SettingsProvider } from "@/contexts/SettingsContext";
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
@@ -17,7 +18,9 @@ createRoot(document.getElementById("root")!).render(
           <AuthProvider>
             <CartProvider>
               <CafeToubaCartProvider>
-                <App />
+                <SettingsProvider>
+                  <App />
+                </SettingsProvider>
               </CafeToubaCartProvider>
             </CartProvider>
           </AuthProvider>

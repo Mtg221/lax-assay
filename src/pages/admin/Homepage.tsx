@@ -1,29 +1,35 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { getSettings, saveSettings, DEFAULT_SETTINGS } from "@/services/settings";
+import { saveSettings } from "@/services/settings";
 import { uploadImage } from "@/lib/cloudinary";
 import { listAllProductsAdmin, updateProduct } from "@/services/products";
-import type { StoreSettings, Product } from "@/types";
+import { useSettings } from "@/contexts/SettingsContext";
+import type { Product } from "@/types";
 
 export default function AdminHomepage() {
-  const [settings, setSettings] = useState<StoreSettings>(DEFAULT_SETTINGS);
+  const { settings: contextSettings, refresh } = useSettings();
   const [products, setProducts] = useState<Product[]>([]);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [heroSlogan, setHeroSlogan] = useState(contextSettings.heroSlogan);
+  const [aboutText, setAboutText] = useState(contextSettings.aboutText);
 
   useEffect(() => {
-    getSettings().then(setSettings);
     listAllProductsAdmin().then(setProducts);
-  }, []);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHeroSlogan(contextSettings.heroSlogan);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAboutText(contextSettings.aboutText);
+  }, [contextSettings]);
 
   const handleHeroUpload = async (file: File | undefined) => {
     if (!file) return;
     setUploading(true);
     try {
       const result = await uploadImage(file, "laxassaye/hero");
-      const newSettings = { ...settings, heroImageUrl: result.url, heroImagePublicId: result.publicId };
-      setSettings(newSettings);
+      const newSettings = { ...contextSettings, heroImageUrl: result.url, heroImagePublicId: result.publicId };
       await saveSettings(newSettings);
+      await refresh();
     } catch (e) {
       alert(e instanceof Error ? e.message : "Erreur lors de l'upload de l'image");
     } finally {
@@ -35,7 +41,8 @@ export default function AdminHomepage() {
     e.preventDefault();
     setSaving(true);
     try {
-      await saveSettings(settings);
+      await saveSettings({ heroSlogan, aboutText });
+      await refresh();
     } finally {
       setSaving(false);
     }
@@ -53,18 +60,18 @@ export default function AdminHomepage() {
       <form onSubmit={handleSave} className="space-y-5 mb-12">
         <div>
           <label className="eyebrow block mb-2">Slogan (hero)</label>
-          <input className="input-lax" value={settings.heroSlogan} onChange={(e) => setSettings({ ...settings, heroSlogan: e.target.value })} />
+          <input className="input-lax" value={heroSlogan} onChange={(e) => setHeroSlogan(e.target.value)} />
         </div>
 
         <div>
           <label className="eyebrow block mb-2">Image du hero</label>
           <input type="file" accept="image/*" onChange={(e) => handleHeroUpload(e.target.files?.[0])} disabled={uploading} />
-          {settings.heroImageUrl && <img src={settings.heroImageUrl} alt="" className="mt-3 w-full max-w-sm aspect-video object-cover rounded-sm" />}
+          {contextSettings.heroImageUrl && <img src={contextSettings.heroImageUrl} alt="" className="mt-3 w-full max-w-sm aspect-video object-cover rounded-sm" />}
         </div>
 
         <div>
           <label className="eyebrow block mb-2">Texte "À propos"</label>
-          <textarea rows={4} className="input-lax" value={settings.aboutText} onChange={(e) => setSettings({ ...settings, aboutText: e.target.value })} />
+          <textarea rows={4} className="input-lax" value={aboutText} onChange={(e) => setAboutText(e.target.value)} />
         </div>
 
         <button type="submit" disabled={saving} className="btn-primary disabled:opacity-50">
