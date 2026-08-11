@@ -1,27 +1,33 @@
 import { useEffect, useState } from "react";
-import { listOrdersAdmin, setOrderStatus } from "@/services/orders";
-import type { Order, OrderStatus } from "@/types";
+import { listCafeToubaOrdersAdmin, setCafeToubaOrderStatus } from "@/services/cafeToubaOrders";
+import type { CafeToubaOrder, OrderStatus } from "@/types";
 
 const statuses: OrderStatus[] = ["Nouvelle", "Confirmée", "En préparation", "Expédiée", "Livrée", "Annulée"];
 
-export default function AdminOrders() {
-  const [orders, setOrders] = useState<Order[]>([]);
+export default function AdminCafeToubaOrders() {
+  const [orders, setOrders] = useState<CafeToubaOrder[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  const load = () => listOrdersAdmin().then(setOrders);
+  const load = () => listCafeToubaOrdersAdmin().then(setOrders);
 
   useEffect(() => {
     load();
   }, []);
 
   const handleStatusChange = async (id: string, status: OrderStatus) => {
-    await setOrderStatus(id, status);
+    await setCafeToubaOrderStatus(id, status);
     load();
+  };
+
+  const paymentMethodLabels: Record<string, string> = {
+    cash_on_delivery: "Paiement à la livraison",
+    wave: "Wave",
+    orange_money: "Orange Money",
   };
 
   return (
     <div>
-      <h1 className="font-display text-3xl mb-8">Commandes</h1>
+      <h1 className="font-display text-3xl mb-8">Commandes Café Touba</h1>
 
       <div className="border border-line dark:border-espresso rounded-sm divide-y divide-line dark:divide-espresso">
         {orders.map((o) => (
@@ -30,11 +36,14 @@ export default function AdminOrders() {
               <div>
                 <p className="text-sm font-medium">{o.orderNumber}</p>
                 <p className="text-xs text-espresso/50 dark:text-cream/50">
-                  {o.customerName} · {o.phone} · {o.zone}, {o.country}
+                  {o.customerName} · {o.phone} · {o.city} · {o.neighborhood || "—"}
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-sm font-semibold">{o.total.toLocaleString("fr-FR")} FCFA</span>
+                <span className="text-xs px-2 py-1 bg-caramel/15 text-caramel rounded-sm">
+                  {paymentMethodLabels[o.paymentMethod] || o.paymentMethod}
+                </span>
                 <select
                   value={o.status}
                   onChange={(e) => handleStatusChange(o.id, e.target.value as OrderStatus)}
@@ -60,7 +69,7 @@ export default function AdminOrders() {
                   {o.items.map((it, idx) => (
                     <div key={idx} className="flex justify-between">
                       <span>
-                        {it.productName} ({it.colorName}) × {it.quantity}
+                        {it.productName} ({it.format}) × {it.quantity}
                       </span>
                       <span>{(it.unitPrice * it.quantity).toLocaleString("fr-FR")} FCFA</span>
                     </div>
@@ -74,7 +83,7 @@ export default function AdminOrders() {
             )}
           </div>
         ))}
-        {orders.length === 0 && <p className="p-6 text-sm text-espresso/50">Aucune commande pour le moment.</p>}
+        {orders.length === 0 && <p className="p-6 text-sm text-espresso/50">Aucune commande Café Touba pour le moment.</p>}
       </div>
     </div>
   );

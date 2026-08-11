@@ -11,7 +11,7 @@ export default function Dashboard() {
     Promise.all([listAllProductsAdmin(), listOrdersAdmin(), listAllReviewsAdmin()]).then(([products, orders, reviews]) => {
       setStats({
         products: products.length,
-        pendingOrders: orders.filter((o) => o.status === "En attente").length,
+        pendingOrders: orders.filter((o) => o.status === "Nouvelle").length,
         pendingReviews: reviews.filter((r) => r.status === "En attente").length,
       });
     });

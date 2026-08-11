@@ -2,12 +2,14 @@ import { Link, NavLink } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useCart } from "@/contexts/CartContext";
+import { useCafeToubaCart } from "@/contexts/CafeToubaCartContext";
 import { useState } from "react";
 
 export default function Header() {
   const { t, locale, setLocale } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { itemCount } = useCart();
+  const { itemCount: cafeItemCount } = useCafeToubaCart();
   const [open, setOpen] = useState(false);
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -28,6 +30,9 @@ export default function Header() {
           </NavLink>
           <NavLink to="/boutique" className={linkClass}>
             {t.nav.shop}
+          </NavLink>
+          <NavLink to="/cafe-touba" className={linkClass}>
+            {t.nav.cafeTouba}
           </NavLink>
           <NavLink to="/a-propos" className={linkClass}>
             {t.nav.about}
@@ -58,9 +63,9 @@ export default function Header() {
               <circle cx="9" cy="20" r="1.4" />
               <circle cx="18" cy="20" r="1.4" />
             </svg>
-            {itemCount > 0 && (
+            {(itemCount + cafeItemCount) > 0 && (
               <span className="absolute -top-1 -right-1 bg-caramel text-cream text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
-                {itemCount}
+                {itemCount + cafeItemCount}
               </span>
             )}
           </Link>
@@ -78,6 +83,9 @@ export default function Header() {
           </NavLink>
           <NavLink to="/boutique" className={linkClass} onClick={() => setOpen(false)}>
             {t.nav.shop}
+          </NavLink>
+          <NavLink to="/cafe-touba" className={linkClass} onClick={() => setOpen(false)}>
+            {t.nav.cafeTouba}
           </NavLink>
           <NavLink to="/a-propos" className={linkClass} onClick={() => setOpen(false)}>
             {t.nav.about}

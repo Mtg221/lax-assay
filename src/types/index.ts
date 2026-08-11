@@ -32,6 +32,21 @@ export interface Product {
   updatedAt: string;
 }
 
+export interface CafeToubaProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: number; // base price in FCFA
+  format: string; // e.g., "250g", "500g", "1kg"
+  imageUrl: string;
+  imagePublicId: string;
+  stock: number;
+  active: boolean;
+  badge?: string; // e.g., "Populaire", "Nouveau"
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ShippingZone {
   id: string;
   country: string;
@@ -40,7 +55,7 @@ export interface ShippingZone {
   freeShipping: boolean;
 }
 
-export type OrderStatus = "En attente" | "Confirmée" | "Livrée" | "Annulée";
+export type OrderStatus = "Nouvelle" | "Confirmée" | "En préparation" | "Expédiée" | "Livrée" | "Annulée";
 
 export interface OrderItem {
   productId: string;
@@ -49,6 +64,14 @@ export interface OrderItem {
   colorName: string;
   quantity: number;
   unitPrice: number; // price actually charged at purchase time
+}
+
+export interface CafeToubaOrderItem {
+  productId: string;
+  productName: string;
+  format: string;
+  quantity: number;
+  unitPrice: number;
 }
 
 export interface Order {
@@ -68,6 +91,26 @@ export interface Order {
   total: number;
   status: OrderStatus;
   createdAt: string;
+}
+
+export interface CafeToubaOrder {
+  id: string;
+  orderNumber: string; // CT-2026-000001
+  customerName: string;
+  phone: string;
+  whatsapp: string;
+  city: string;
+  neighborhood: string;
+  address: string;
+  comment?: string;
+  items: CafeToubaOrderItem[];
+  subtotal: number;
+  shippingCost: number;
+  total: number;
+  paymentMethod: "cash_on_delivery" | "wave" | "orange_money";
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Review {

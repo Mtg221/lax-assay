@@ -3,13 +3,15 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const links = [
   { to: "/admin", label: "Tableau de bord", end: true },
-  { to: "/admin/produits", label: "Produits" },
+  { to: "/admin/produits", label: "Produits (Écharpes)" },
   { to: "/admin/couleurs", label: "Couleurs" },
-  { to: "/admin/commandes", label: "Commandes" },
+  { to: "/admin/commandes", label: "Commandes (Écharpes)" },
   { to: "/admin/livraison", label: "Livraison" },
   { to: "/admin/avis", label: "Avis" },
   { to: "/admin/accueil", label: "Homepage" },
   { to: "/admin/parametres", label: "Paramètres" },
+  { to: "/admin/cafe-touba/produits", label: "Café Touba — Produits" },
+  { to: "/admin/cafe-touba/commandes", label: "Café Touba — Commandes" },
 ];
 
 export default function AdminLayout() {

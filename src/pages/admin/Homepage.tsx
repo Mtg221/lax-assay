@@ -21,7 +21,11 @@ export default function AdminHomepage() {
     setUploading(true);
     try {
       const result = await uploadImage(file, "laxassaye/hero");
-      setSettings((s) => ({ ...s, heroImageUrl: result.url, heroImagePublicId: result.publicId }));
+      const newSettings = { ...settings, heroImageUrl: result.url, heroImagePublicId: result.publicId };
+      setSettings(newSettings);
+      await saveSettings(newSettings);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Erreur lors de l'upload de l'image");
     } finally {
       setUploading(false);
     }

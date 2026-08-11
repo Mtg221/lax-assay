@@ -10,6 +10,11 @@ import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import Confirmation from "@/pages/Confirmation";
 import About from "@/pages/About";
+import CafeTouba from "@/pages/CafeTouba";
+import CafeToubaProduct from "@/pages/CafeToubaProduct";
+import CafeToubaCart from "@/pages/CafeToubaCart";
+import CafeToubaCheckout from "@/pages/CafeToubaCheckout";
+import CafeToubaConfirmation from "@/pages/CafeToubaConfirmation";
 import NotFound from "@/pages/NotFound";
 
 const AdminLayout = lazy(() => import("@/layouts/AdminLayout"));
@@ -23,6 +28,9 @@ const AdminShipping = lazy(() => import("@/pages/admin/Shipping"));
 const AdminReviews = lazy(() => import("@/pages/admin/Reviews"));
 const AdminHomepage = lazy(() => import("@/pages/admin/Homepage"));
 const AdminSettings = lazy(() => import("@/pages/admin/Settings"));
+const AdminCafeToubaProducts = lazy(() => import("@/pages/admin/CafeToubaProducts"));
+const AdminCafeToubaProductForm = lazy(() => import("@/pages/admin/CafeToubaProductForm"));
+const AdminCafeToubaOrders = lazy(() => import("@/pages/admin/CafeToubaOrders"));
 
 function AdminFallback() {
   return <div className="min-h-screen flex items-center justify-center text-sm">Chargement…</div>;
@@ -39,6 +47,11 @@ export default function App() {
         <Route path="/commande" element={<Checkout />} />
         <Route path="/confirmation/:orderNumber" element={<Confirmation />} />
         <Route path="/a-propos" element={<About />} />
+        <Route path="/cafe-touba" element={<CafeTouba />} />
+        <Route path="/cafe-touba/produit/:id" element={<CafeToubaProduct />} />
+        <Route path="/cafe-touba/panier" element={<CafeToubaCart />} />
+        <Route path="/cafe-touba/commander" element={<CafeToubaCheckout />} />
+        <Route path="/cafe-touba/confirmation/:orderNumber" element={<CafeToubaConfirmation />} />
       </Route>
 
       <Route
@@ -68,6 +81,9 @@ export default function App() {
         <Route path="avis" element={<AdminReviews />} />
         <Route path="accueil" element={<AdminHomepage />} />
         <Route path="parametres" element={<AdminSettings />} />
+        <Route path="cafe-touba/produits" element={<AdminCafeToubaProducts />} />
+        <Route path="cafe-touba/produits/:id" element={<AdminCafeToubaProductForm />} />
+        <Route path="cafe-touba/commandes" element={<AdminCafeToubaOrders />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

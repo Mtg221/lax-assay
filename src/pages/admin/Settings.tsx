@@ -20,7 +20,11 @@ export default function AdminSettings() {
     setUploading(true);
     try {
       const result = await uploadImage(file, "laxassaye/logo");
-      setSettings((s) => ({ ...s, logoUrl: result.url }));
+      const newSettings = { ...settings, logoUrl: result.url };
+      setSettings(newSettings);
+      await saveSettings(newSettings);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Erreur lors de l'upload du logo");
     } finally {
       setUploading(false);
     }
