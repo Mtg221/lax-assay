@@ -37,6 +37,14 @@ export default function AdminSettings() {
     }
   };
 
+  const handleLogoDelete = async () => {
+    if (!confirm("Supprimer le logo ?")) return;
+    const newSettings = { ...settings, logoUrl: "" };
+    setSettings(newSettings);
+    await saveSettings(newSettings);
+    await refresh();
+  };
+
   const toggleFreeZone = (zoneId: string) => {
     setSettings((s) => ({
       ...s,
@@ -69,7 +77,14 @@ export default function AdminSettings() {
       <div>
         <label className="eyebrow block mb-2">Logo</label>
         <input type="file" accept="image/*" onChange={(e) => handleLogoUpload(e.target.files?.[0])} disabled={uploading} />
-        {settings.logoUrl && <img src={settings.logoUrl} alt="" className="mt-3 h-14" />}
+        {settings.logoUrl && (
+          <div className="mt-3 flex items-center gap-4">
+            <img src={settings.logoUrl} alt="" className="h-14" />
+            <button type="button" onClick={handleLogoDelete} className="text-xs text-clay hover:opacity-70">
+              Supprimer
+            </button>
+          </div>
+        )}
       </div>
 
       <div>
