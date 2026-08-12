@@ -37,6 +37,21 @@ export default function AdminHomepage() {
     }
   };
 
+  const handleCafeToubaHeroUpload = async (file: File | undefined) => {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const result = await uploadImage(file, "laxassaye/cafe-touba-hero");
+      const newSettings = { ...contextSettings, cafeToubaHeroImageUrl: result.url, cafeToubaHeroImagePublicId: result.publicId };
+      await saveSettings(newSettings);
+      await refresh();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Erreur lors de l'upload de l'image");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSave = async (e: FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -67,6 +82,12 @@ export default function AdminHomepage() {
           <label className="eyebrow block mb-2">Image du hero</label>
           <input type="file" accept="image/*" onChange={(e) => handleHeroUpload(e.target.files?.[0])} disabled={uploading} />
           {contextSettings.heroImageUrl && <img src={contextSettings.heroImageUrl} alt="" className="mt-3 w-full max-w-sm aspect-video object-cover rounded-sm" />}
+        </div>
+
+        <div>
+          <label className="eyebrow block mb-2">Image du hero Café Touba</label>
+          <input type="file" accept="image/*" onChange={(e) => handleCafeToubaHeroUpload(e.target.files?.[0])} disabled={uploading} />
+          {contextSettings.cafeToubaHeroImageUrl && <img src={contextSettings.cafeToubaHeroImageUrl} alt="" className="mt-3 w-full max-w-sm aspect-video object-cover rounded-sm" />}
         </div>
 
         <div>

@@ -126,11 +126,13 @@ export interface Review {
 export interface StoreSettings {
   storeName: string;
   logoUrl: string;
-  whatsappNumber: string; // international format, digits only
+  whatsappNumber: string;
   socialLinks: { instagram?: string; facebook?: string; tiktok?: string };
   heroSlogan: string;
   heroImageUrl: string;
   heroImagePublicId?: string;
+  cafeToubaHeroImageUrl: string;
+  cafeToubaHeroImagePublicId?: string;
   aboutText: string;
   freeShippingEnabled: boolean;
   freeShippingZoneIds: string[];

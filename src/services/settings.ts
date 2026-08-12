@@ -11,6 +11,7 @@ export const DEFAULT_SETTINGS: StoreSettings = {
   socialLinks: {},
   heroSlogan: "L'élégance, une écharpe à la fois.",
   heroImageUrl: "",
+  cafeToubaHeroImageUrl: "",
   aboutText: "Laxassaye crée des écharpes intemporelles, pensées pour durer et se transmettre.",
   freeShippingEnabled: false,
   freeShippingZoneIds: [],

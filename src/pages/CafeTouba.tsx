@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { listActiveCafeToubaProducts } from "@/services/cafeToubaProducts";
 import { useCafeToubaCart } from "@/contexts/CafeToubaCartContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSettings } from "@/contexts/SettingsContext";
 import { optimizedUrl } from "@/lib/cloudinary";
 import type { CafeToubaProduct } from "@/types";
 import React from "react";
@@ -73,6 +74,7 @@ function CafeToubaProductCard({ product }: { product: CafeToubaProduct }) {
 
 export default function CafeTouba() {
   const { t } = useLanguage();
+  const { settings } = useSettings();
   const [products, setProducts] = useState<CafeToubaProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -89,7 +91,15 @@ export default function CafeTouba() {
     <div>
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[480px] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-sand via-cream to-caramel/30 dark:from-espresso dark:via-ink dark:to-bark" />
+        {settings.cafeToubaHeroImageUrl ? (
+          <img
+            src={optimizedUrl(settings.cafeToubaHeroImageUrl, 1600)}
+            alt="Laxassaye — Café Touba"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-sand via-cream to-caramel/30 dark:from-espresso dark:via-ink dark:to-bark" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/10 to-transparent" />
         <div className="relative h-full container-lax flex flex-col justify-end pb-20">
           <p className="eyebrow text-cream mb-4">Laxassaye</p>
